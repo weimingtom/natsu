@@ -1,22 +1,13 @@
 {
     "import": {
+        "config.bkpsr": 0,
+        "init.bkscr": 0,
         "macro.bkscr": 0,
         "main.bkscr": 0
     },
     "name": "夏之空",
     "script": {
-        "scripts": {
-            "music.bkscr": 0,
-            "setting.bkscr": 0,
-            "startup.bkscr": 0,
-            "story.bkscr": 0,
-            "system": {
-                "extend.bkscr": 0,
-                "init.bkscr": 0,
-                "system_history.bkscr": 0,
-                "text.bkscr": 0
-            }
-        }
+        "mainmenu.bkscr": 0
     },
     "source": {
     },

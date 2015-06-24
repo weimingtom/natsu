@@ -1,0 +1,28 @@
+﻿*init
+//初始化存档信息
+
+##
+if(!natsu.init){
+	//设置信息	
+	natsu.fullscreen=false;   //全屏
+	natsu.init=1;                   //初始化
+	
+	//存档信息
+	natsu.lastsave=-1;         //最新的存档号码
+	natsu.ingame=false;     //进入游戏的标志
+	
+	//标题信息
+	natsu.cgmode=-1;         //CG鉴赏模式
+	natsu.cg=[];
+	
+	//音乐鉴赏模式
+	natsu.musicmode=-1;  //默认锁定
+	natsu.bgm=[];
+	natsu.bgm[0]=false;
+	natsu.bgm[1]=false;
+	natsu.bgm[2]=false;
+	natsu.bgm[3]=false;
+	natsu.bgm[4]=false;
+}
+##
+@return

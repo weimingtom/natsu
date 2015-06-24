@@ -1,4 +1,3 @@
 ﻿*main
-
-@call '*init' 'init'
-@jump file="startup.bkscr" label="*start"
+@call file="init" label="*init"
+@jump file="mainmenu" label="*start"
