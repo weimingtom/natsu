@@ -1,0 +1,19 @@
+﻿*init
+//初始化全局的一些信息，仅仅执行一次（除非删掉savedata文件夹）
+##
+if(!sf.init){
+	sf.full=true;
+	sf.sliderValue=[2000-System.autoModeTime,System.textSpeed,Channel.musicVolume,Channel.soundVolume,Channel.voiceVolume]//big small full
+	sf.init=1;
+	sf.last_save_page=0;
+	sf.last_save=-1;
+	sf.bgm=[];
+	sf.bgm[0]=sf.bgm[1]=sf.bgm[2]=false;
+	sf.lastbg="00";
+	sf.ingame=false;
+	sf.menu=false;
+}
+	History.maxChars=78;
+	f.firstline=false;
+##
+@return

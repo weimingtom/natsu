@@ -1,0 +1,13 @@
+#################
+## BKEngine
+#################
+
+## Files
+*.bkbin
+*.bksav
+*.bkpsr
+GameLog.txt
+
+
+##Folders
+savedata/

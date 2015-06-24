@@ -1,0 +1,53 @@
+﻿*register
+@macro name="fadetext" text color=#FFFAFA time=1700
+@macro name="loadtext" text color=#FFFAFA time=3000
+@return
+
+*fadetext
+@textsprite index=100 text=text color=color
+@anchor index=100 set="center"
+@addto index=100 target=basic_layer opacity=0 pos=[640,300]
+
+@action mode="queue"
+@action mode="parallel"
+@action mode="moveto" pos=[640,360] time=time 
+@action mode="fadeto" opacity=255 time=time
+@action mode="end"
+
+@action mode="parallel"
+@action mode="fadeto" opacity=0 time=time
+@action mode="moveto" pos=[640,400] time=time
+@action mode="end"
+@action mode="start" target=100
+@waitaction index=100 canskip=true
+#History.add(text,true)
+@return true
+
+//不完善，暂时不用
+*loadtext
+@textsprite index=100 text=text color=color
+@anchor index=100 set="center"
+@addto index=100 target=basic_layer pos=[640,360]
+
+@layer index=101 width=1000 height=50 color=0x000000 opacity=150
+@anchor index=101 set="center"
+@addto index=101 target=basic_layer pos=[640,360]
+
+@action mode="moveby" pos=[1000,0] time=time target=101
+
+/*
+@action mode="queue"
+@action mode="parallel"
+@action mode="moveto" pos=[640,360] time=1500
+@action mode="fadeto" opacity=255 time=1500
+@action mode="end"
+
+@action mode="parallel"
+@action mode="fadeto" opacity=0 time=1500
+@action mode="moveto" pos=[640,400] time=1500
+@action mode="end"
+@action mode="start" target=100
+*/
+
+@waitaction index=101
+@return true

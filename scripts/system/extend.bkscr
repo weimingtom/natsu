@@ -1,0 +1,154 @@
+﻿*register
+//注册宏
+@macro name="basic_dialogbox"
+@macro name="select" text label se=void labelFile
+@macro name="disable_dialogbox"
+@macro name="enable_dialogbox"
+@return
+
+//用来禁用对话框事件的宏
+*disable_dialogbox
+@spriteopt index=9000 disable=true
+@event name="mousewheelup" enable=false
+//@event name="mousewheeldown" enable=false
+@return
+
+//用来启用对话框事件的宏
+*enable_dialogbox
+@spriteopt index=9000 disable=false
+@event name="mousewheelup" enable=true file="system_history" label="*enter" type="call" ignore=true condition="System.stable"
+//@event name="mousewheeldown" enable=true file="extend" label="*mouse" type="call" ignore=true
+@return
+
+//游戏过程中的滚轮事件
+*mouse
+//向下时等于点击
+@sendsystemevent name="click"
+@return
+
+//设置对话框的宏
+*basic_dialogbox
+#update_x=(System.resolutionSize[0]/2)-400;
+#update_y=System.resolutionSize[1]-600;
+[textwindow pos=[15+update_x,444+update_y] rect=[10,5,760,116] xinterval=1 yinterval=1 opacity=190]
+[textstyle size=21 bold=false]
+
+[sprite index=500 file="menu/textwindow/main_flat_set"]
+[addto index=500 target=message_layer zorder=-13 pos=[-30,-10] opacity=180]
+[sprite index=501 file="menu/textwindow/main_flat_set2"]
+[addto index=501 target=message_layer zorder=-12 pos=[0,0] opacity=180]
+
+@enable_dialogbox
+[return]
+
+//选择宏
+//修改自教程extend文件下的select宏
+*select
+//@savepoint
+
+//用来确认输入的格式正确，如果错误就会在命令行中报错并结束这个宏
+@if "typeof(text)!='array'"
+	#log("select：text参数需要一个数组");
+	@return false
+@elseif "typeof(label)!='array'"
+	#log("select：label参数需要一个数组");
+	@return false
+@elseif "text.size!=label.size"
+	#log("select：text和label元素数目应该相同");
+	@return false
+@elseif "labelFile.size!=label.size"
+	#log("select：labelFile和label元素数目应该相同");
+	@return false
+@endif
+#var size = label.size;
+@if "size < 2"
+#log("select：选择支数量应该不小于2");
+	@return false
+@endif
+
+//选项创建从这里开始
+//获取 选项数*5 个空编号
+#var indexes = [];
+@idlesp get=indexes num=size*5
+
+#var success = true;
+#var info1 = %[];
+//获取文件的信息，并检查文件是否存在
+@info file='selbutton' get=info1
+@if "!info1.size"
+	#log("select：file文件不存在：" + file);
+	@return false
+@endif
+
+#var zorder;
+@zorder index=message_layer get=zorder
+#tf.curi=0;
+
+//创建动作队列，当每一个按钮被创建后，他的显示动作会被添加到这个队列中
+@action mode="queue"
+@for var=i range=range(size)
+	//创建idle 和 hover 状态的底层
+	@sprite index=indexes[i*5] file='selbutton'
+	@sprite index=indexes[i*5+1] file='selbutton_on'
+	
+	//创建文字精灵并调整他们的锚点
+	//因为同一个文字精灵只能加到一个底层上，所以这里直接创建了2个文子精灵
+	@textsprite index=indexes[i*5+2] text=text[i] color=0x0
+	@anchor index=indexes[i*5+2] set="center"
+	@textsprite index=indexes[i*5+3] text=text[i] color=0x0
+	@anchor index=indexes[i*5+3] set="center"
+	
+	//将文字精灵添加到按钮底层上
+	@addto index=indexes[i*5+2] target=indexes[i*5] pos=[info1.width/2, info1.height/2]
+	@addto index=indexes[i*5+3] target=indexes[i*5+1] pos=[info1.width/2, info1.height/2+2] 
+	
+	//用两个按钮底层生成按钮。
+	//这里的事件流程如下：
+	//在按钮被按下时，保存哪个按钮被选择，然后跳转到选择结束标签
+	@buttonex index=indexes[i*5+4] idle=indexes[i*5] hover=indexes[i*5+1] onclick=["*_selectend",'extend','jump',"tf.curi=curi",%[curi:i],%[ignore:true]]
+	
+	//获取这个新按钮的信息
+	#var info2 = %[]
+	@infoex index=indexes[i*5+4] get=info2
+	//计算这个按钮的新坐标，并以透明的状态添加到底层上
+	#var winsize = System.resolutionSize;
+	#var w = ( winsize[0] - info2.width ) / 2;
+	#var h = ( winsize[1] - info2.height * size - ( size-1 ) * 50 ) / 2;
+	@addto index=indexes[i*5+4] target=basic_layer zorder=zorder pos=[w, h + i * ( 50 + info2.height )] opacity=0
+	
+	//将显示这一动作添加到动作列表中，此处的动作作用是将按钮的透明度从0变到255
+	@action mode="fadeto" opacity=255 time=400 target=indexes[i*5+4]
+//进行下一次循环
+@next
+
+//当一切动作添加完毕后开始执行动作队列
+@action mode="start" target=basic_layer
+
+//等待用户点击
+@waitbutton
+//返回
+@return true
+
+
+//选择结束标签
+*_selectend
+//如果有音效则播放音效
+@if "se!=void"
+@se file=se channel=0
+@endif
+
+//让按钮消失
+@for var=i range=range(size)
+	@action mode="fadeto" opacity=0 target=indexes[i*5+4] time=500
+@next
+//等待其中一个动作解释（因为每个动作都是一样长的，所以理论上来说应该同时结束）
+@waitaction index=indexes[4]
+//清除工作
+@for var=i range=range(size)
+	@remove index=indexes[i*5+4] delete=true
+@next
+
+
+//跳转到按钮对应的标签
+//因为是call进来的，所以要用returnto 而不是 jump
+@returnto label=label[tf.curi] file=labelFile[tf.curi]

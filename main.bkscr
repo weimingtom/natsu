@@ -1,0 +1,4 @@
+﻿*main
+
+@call '*init' 'init'
+@jump file="startup.bkscr" label="*start"

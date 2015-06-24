@@ -1,0 +1,17 @@
+﻿*register
+//这之间写上要定义的宏或导入其他的宏文件
+@import "extend"
+@import "text"
+[return]
+
+//在下面写上宏的实现部分
+*textbutton
+//定义文字
+@textsprite index=10001 text=text color=0xFFFFFF
+@textsprite index=10002 text=text color=0x93B2FF
+@textsprite index=10003 text=text color=0x6E86BF
+//把文字变成按钮
+@buttonex index=index idle=10001 hover=10002 click=10003 onclick=onclick
+//设定锚点（对齐方式）
+@anchor index=index set="center"
+[return]

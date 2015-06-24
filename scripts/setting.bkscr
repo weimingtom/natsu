@@ -1,0 +1,77 @@
+﻿*start
+
+##
+var poss=[[480,100],[580,100]]
+##
+
+@layer index=200 width=1280 height=720
+
+@sprite index=201 file="setting"
+@addto index=201 target=200
+//////////////////////////////////////////
+@textsprite index=202 text="显示模式" size=30 color=#66ffcc
+@addto index=202 target=200 pos=[300,100]
+
+@if exp="sf.full"
+	@textsprite index=203 text="全屏" size=30 color=#66ffcc
+	@textsprite index=204 text="窗口" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
+	@buttonex index=205 idle=204 onclick=["*window",,'callback']
+	
+	@addto index=203 target=200 pos=poss[0]
+	@addto index=205 target=200 pos=poss[1]
+@else
+	@textsprite index=204 text="全屏" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
+	@textsprite index=203 text="窗口" size=30 color=#66ffcc
+	@buttonex index=205 idle=204 onclick=["*full",,'callback']
+	
+	@addto index=203 target=200 pos=poss[0]
+	@addto index=205 target=200 pos=poss[1]@endif
+
+
+//////////////////////////////////////////
+@addto index=200 target=basic_layer opacity=0
+@action target=200 mode='fadeto' opacity=255 time=1000
+	
+@event name="rclick" type="jump" enable=true label="*exit" ignore=true
+@waitbutton
+
+*window
+@pretrans
+@textsprite index=203 text="全屏" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
+@textsprite index=204 text="窗口" size=30 color=#66ffcc
+@buttonex index=205 idle=203 onclick=["*full",,'callback']
+##
+sf.full=false;
+System.fullScreen=false;
+System.windowSize=[1280,720];	
+##
+[trans mode='normal']
+@call "*final"
+@return
+
+*full
+@pretrans
+@textsprite index=204 text="全屏" size=30 color=#66ffcc
+@textsprite index=203 text="窗口" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
+@buttonex index=205 idle=203 onclick=["*window",,'callback']
+##
+sf.full=true;
+System.fullScreen=true;
+##
+[trans mode='normal']
+@call "*final"
+@return
+
+*final
+##
+var poss=[[480,100],[580,100]]
+##
+@addto index=204 target=200 pos=poss[0]
+@addto index=205 target=200 pos=poss[1]
+@return
+
+*exit
+@action target=200 mode='fadeto' opacity=0 time=1000
+@wait time=1000 canskip=false
+@removeall index=200 delete=true
+@return
