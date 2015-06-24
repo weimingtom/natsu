@@ -30,7 +30,7 @@ System.skipMode=false;
 @addto index=51 target=5000
 
 //@sprite index=52 file='menu/title/title'
-@textsprite index=52 text="12345" size=80 color=#468CC8
+@textsprite index=52 text="夏之空" size=80 color=#468CC8
 @anchor index=52 set="center"
 @addto index=52 target=5000 pos=[640,200]
 @action mode='fadeto' target=52 opacity=255 time=300

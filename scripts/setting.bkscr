@@ -15,14 +15,14 @@ var poss=[[480,100],[580,100]]
 @if exp="sf.full"
 	@textsprite index=203 text="全屏" size=30 color=#66ffcc
 	@textsprite index=204 text="窗口" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
-	@buttonex index=205 idle=204 onclick=["*window",,'callback']
+	@buttonex index=205 idle=204 onclick=["*window",'setting.bkscr','callback']
 	
 	@addto index=203 target=200 pos=poss[0]
 	@addto index=205 target=200 pos=poss[1]
 @else
 	@textsprite index=204 text="全屏" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
 	@textsprite index=203 text="窗口" size=30 color=#66ffcc
-	@buttonex index=205 idle=204 onclick=["*full",,'callback']
+	@buttonex index=205 idle=204 onclick=["*full",'setting.bkscr','callback']
 	
 	@addto index=203 target=200 pos=poss[0]
 	@addto index=205 target=200 pos=poss[1]@endif
@@ -37,6 +37,7 @@ var poss=[[480,100],[580,100]]
 
 *window
 @pretrans
+#log.i("456")
 @textsprite index=203 text="全屏" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
 @textsprite index=204 text="窗口" size=30 color=#66ffcc
 @buttonex index=205 idle=203 onclick=["*full",,'callback']
@@ -51,6 +52,7 @@ System.windowSize=[1280,720];
 
 *full
 @pretrans
+#log.i("123")
 @textsprite index=204 text="全屏" size=30 color=#66ffcc
 @textsprite index=203 text="窗口" size=30 color=#ff4500 //stroke=true strokecolor=#66ccff
 @buttonex index=205 idle=203 onclick=["*window",,'callback']
